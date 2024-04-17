@@ -71,6 +71,12 @@ impl<T> LinkedList<T> {
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
+        let res = Self::new();
+        let p_a = list_a.start;
+        let p_b = list_b.start;
+        while p_a.is_some() && p_b.is_some() {
+            if list_a
+        }
 		//TODO
 		Self {
             length: 0,
