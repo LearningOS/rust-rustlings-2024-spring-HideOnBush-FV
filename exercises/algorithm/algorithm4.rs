@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -41,7 +40,7 @@ where
 
 impl<T> BinarySearchTree<T>
 where
-    T: Ord,
+    T: Ord + Copy,
 {
 
     fn new() -> Self {
@@ -50,14 +49,29 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        // let mut x = &mut self.root;
+        // let mut cur_node = &mut Box::new(TreeNode::new(value));
+        // let mut cur_node = x.as_ref().unwrap();
+        // let new_root = x;
+        if self.root.is_some() {
+            // let Some(cur_node) = x.as_mut() else {};
+            // new_root = x;
+            self.root.as_deref_mut().unwrap().insert(value);
+        } else {
+            self.root = Some(Box::new(TreeNode::new(value)))
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        if self.root.is_none() {
+            false
+        } else {
+            self.root.as_ref().unwrap().search(value)
+        }
     }
+
 }
 
 impl<T> TreeNode<T>
@@ -67,6 +81,42 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        match self.value.cmp(&value) {
+            Ordering::Less => match &mut self.left {
+                Some(ref mut l) => l.insert(value),
+                None => {
+                    self.left.replace(Box::new(Self::new(value)));
+                }
+            },
+            Ordering::Greater => match &mut self.right {
+                Some(ref mut r) => r.insert(value),
+                None => {
+                    self.right.replace(Box::new(Self::new(value)));
+                }
+            },
+            _ => {}
+        };
+    }
+
+    
+    // Search for a value in the BST
+    fn search(&self, value: T) -> bool {
+        //TODO
+        if self.value == value {
+            true
+        } else if self.value < value {
+            if let Some(node) = &self.left {
+                node.search(value)
+            } else {
+                false
+            }
+        } else {
+            if let Some(node) = &self.right {
+                node.search(value)
+            } else {
+                false
+            }
+        }
     }
 }
 
